@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sevgililer Günün Kutlu Olsun 💕</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(180deg, #0a0f0a 0%, #0d1a0d 50%, #081208 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            font-family: 'Quicksand', sans-serif;
+            position: relative;
+        }
+
+        /* Ateş böcekleri */
+        .firefly {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background: #9fff5f;
+            border-radius: 50%;
+            box-shadow: 
+                0 0 10px 4px #9fff5f, 
+                0 0 20px 8px rgba(159, 255, 95, 0.6),
+                0 0 30px 12px rgba(159, 255, 95, 0.3);
+            animation: fireflyFloat 6s ease-in-out infinite;
+            opacity: 0;
+        }
+
+        @keyframes fireflyFloat {
+            0%, 100% {
+                opacity: 0;
+                transform: translate(0, 0);
+            }
+            5% {
+                opacity: 1;
+            }
+            25% {
+                opacity: 0.9;
+                transform: translate(30px, -50px);
+            }
+            50% {
+                opacity: 0.7;
+                transform: translate(-20px, -100px);
+            }
+            75% {
+                opacity: 0.9;
+                transform: translate(40px, -60px);
+            }
+            95% {
+                opacity: 1;
+            }
+        }
+
+        /* Üst başlık */
+        .header {
+            position: absolute;
+            top: 8%;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            z-index: 100;
+        }
+
+        .valentine-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, rgba(255,107,157,0.15), rgba(196,77,255,0.15));
+            border: 1px solid rgba(255,107,157,0.25);
+            border-radius: 30px;
+            padding: 8px 20px;
+            margin-bottom: 15px;
+            font-size: clamp(0.7rem, 2.5vw, 0.9rem);
+            color: #ff6b9d;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            opacity: 0;
+            animation: fadeIn 1s ease forwards;
+            animation-delay: 2s;
+        }
+
+        .name-title {
+            font-family: 'Pacifico', cursive;
+            font-size: clamp(2.5rem, 12vw, 5rem);
+            background: linear-gradient(135deg, #00e5ff, #64ffda, #00e5ff);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 60px rgba(0, 229, 255, 0.5);
+            animation: gradientFlow 3s ease infinite, fadeIn 2s ease forwards;
+            opacity: 0;
+            animation-delay: 2.5s, 2.5s;
+        }
+
+        .subtitle {
+            color: rgba(255,255,255,0.6);
+            font-size: clamp(0.9rem, 3vw, 1.1rem);
+            font-weight: 300;
+            margin-top: 10px;
+            opacity: 0;
+            animation: fadeIn 2s ease forwards;
+            animation-delay: 3s;
+        }
+
+        .heart-icon {
+            display: inline-block;
+            animation: heartPulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes gradientFlow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes heartPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+        }
+
+        /* Çiçek canvas */
+        #flowerCanvas {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* Parıltı efektleri */
+        .glow-particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #00e5ff;
+            border-radius: 50%;
+            box-shadow: 0 0 10px 4px rgba(0, 229, 255, 0.8);
+            pointer-events: none;
+            animation: glowFloat 2.5s ease-out forwards;
+        }
+
+        @keyframes glowFloat {
+            0% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-120px) scale(0);
+            }
+        }
+
+        /* Kalpler */
+        .floating-heart {
+            position: absolute;
+            color: #ff6b9d;
+            text-shadow: 0 0 15px rgba(255, 107, 157, 0.7);
+            pointer-events: none;
+            animation: heartFloat 5s ease-out forwards;
+        }
+
+        @keyframes heartFloat {
+            0% {
+                opacity: 1;
+                transform: translateY(0) scale(1) rotate(0deg);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-300px) scale(0.5) rotate(15deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 class="name-title">HATİCE</h1>
+        <p class="subtitle">Seninle her gün <span class="heart-icon">💕</span> özel</p>
+    </div>
+
+    <canvas id="flowerCanvas"></canvas>
+
+    <script>
+        const canvas = document.getElementById('flowerCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let width, height;
+
+        function resize() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+        }
+
+        resize();
+        window.addEventListener('resize', resize);
+
+        // Çiçek verileri
+        const flowers = [];
+        const leaves = [];
+        const stems = [];
+
+        // Renkler
+        const colors = {
+            stem: '#006666',
+            stemLight: '#00a8a8',
+            leaf: '#00b8b8',
+            leafLight: '#00e5e5',
+            petal: '#b3ffff',
+            petalMid: '#00d4ff',
+            petalDark: '#0099cc',
+            center: '#ffd700'
+        };
+
+        // Çiçek yapısı
+        class Flower {
+            constructor(x, baseY, stemHeight, delay, angle = 0) {
+                this.x = x;
+                this.baseY = baseY;
+                this.stemHeight = stemHeight;
+                this.delay = delay;
+                this.angle = angle;
+                this.progress = 0;
+                this.bloomProgress = 0;
+                this.started = false;
+            }
+
+            update(time) {
+                if (time < this.delay) return;
+                this.started = true;
+
+                const elapsed = time - this.delay;
+                
+                // Sap büyümesi (1.5 saniye)
+                if (elapsed < 1500) {
+                    this.progress = elapsed / 1500;
+                } else {
+                    this.progress = 1;
+                }
+
+                // Çiçek açılması (0.8 saniye)
+                if (elapsed > 1200) {
+                    this.bloomProgress = Math.min(1, (elapsed - 1200) / 800);
+                }
+            }
+
+            draw() {
+                if (!this.started) return;
+
+                const currentHeight = this.stemHeight * this.progress;
+                
+                // Eğri hesaplama
+                const controlX = this.x + Math.sin(this.angle) * 30;
+                const endX = this.x + Math.sin(this.angle) * currentHeight * 0.3;
+                const endY = this.baseY - currentHeight;
+
+                // Sap çizimi
+                ctx.beginPath();
+                ctx.moveTo(this.x, this.baseY);
+                ctx.quadraticCurveTo(controlX, this.baseY - currentHeight / 2, endX, endY);
+                
+                const gradient = ctx.createLinearGradient(this.x, this.baseY, endX, endY);
+                gradient.addColorStop(0, colors.stem);
+                gradient.addColorStop(1, colors.stemLight);
+                
+                ctx.strokeStyle = gradient;
+                ctx.lineWidth = 4;
+                ctx.lineCap = 'round';
+                ctx.shadowColor = '#00ffff';
+                ctx.shadowBlur = 15;
+                ctx.stroke();
+                ctx.shadowBlur = 0;
+
+                // Yapraklar
+                if (this.progress > 0.3) {
+                    this.drawLeaf(this.x, this.baseY - currentHeight * 0.25, -1, (this.progress - 0.3) / 0.7);
+                }
+                if (this.progress > 0.5) {
+                    this.drawLeaf(this.x + Math.sin(this.angle) * currentHeight * 0.15, this.baseY - currentHeight * 0.5, 1, (this.progress - 0.5) / 0.5);
+                }
+                if (this.progress > 0.7) {
+                    this.drawLeaf(this.x + Math.sin(this.angle) * currentHeight * 0.25, this.baseY - currentHeight * 0.75, -1, (this.progress - 0.7) / 0.3);
+                }
+
+                // Çiçek
+                if (this.bloomProgress > 0) {
+                    this.drawFlower(endX, endY);
+                }
+            }
+
+            drawLeaf(x, y, dir, progress) {
+                const size = 25 * Math.min(1, progress);
+                
+                ctx.save();
+                ctx.translate(x, y);
+                ctx.rotate(dir * 0.5);
+                ctx.scale(dir, 1);
+
+                ctx.beginPath();
+                ctx.moveTo(0, 0);
+                ctx.bezierCurveTo(size * 0.5, -size * 0.3, size, -size * 0.1, size, 0);
+                ctx.bezierCurveTo(size, size * 0.1, size * 0.5, size * 0.3, 0, 0);
+
+                const leafGrad = ctx.createLinearGradient(0, 0, size, 0);
+                leafGrad.addColorStop(0, colors.leaf);
+                leafGrad.addColorStop(1, colors.leafLight);
+                
+                ctx.fillStyle = leafGrad;
+                ctx.shadowColor = '#00ffff';
+                ctx.shadowBlur = 10;
+                ctx.fill();
+                ctx.shadowBlur = 0;
+
+                ctx.restore();
+            }
+
+            drawFlower(x, y) {
+                const petalCount = 5;
+                const petalSize = 30 * this.bloomProgress;
+                const petalLength = 45 * this.bloomProgress;
+
+                ctx.save();
+                ctx.translate(x, y);
+
+                // Yapraklar
+                for (let i = 0; i < petalCount; i++) {
+                    const angle = (i / petalCount) * Math.PI * 2 - Math.PI / 2;
+                    
+                    ctx.save();
+                    ctx.rotate(angle);
+                    ctx.translate(0, -petalSize * 0.3);
+
+                    ctx.beginPath();
+                    ctx.ellipse(0, -petalLength / 2, petalSize / 2, petalLength / 2, 0, 0, Math.PI * 2);
+
+                    const petalGrad = ctx.createRadialGradient(0, -petalLength / 2, 0, 0, -petalLength / 2, petalLength / 2);
+                    petalGrad.addColorStop(0, colors.petal);
+                    petalGrad.addColorStop(0.5, colors.petalMid);
+                    petalGrad.addColorStop(1, colors.petalDark);
+
+                    ctx.fillStyle = petalGrad;
+                    ctx.shadowColor = '#00ffff';
+                    ctx.shadowBlur = 20;
+                    ctx.fill();
+                    ctx.shadowBlur = 0;
+
+                    ctx.restore();
+                }
+
+                // Merkez
+                const centerSize = 12 * this.bloomProgress;
+                const centerGrad = ctx.createRadialGradient(0, 0, 0, 0, 0, centerSize);
+                centerGrad.addColorStop(0, '#ffffa8');
+                centerGrad.addColorStop(0.6, colors.center);
+                centerGrad.addColorStop(1, '#cc9900');
+
+                ctx.beginPath();
+                ctx.arc(0, 0, centerSize, 0, Math.PI * 2);
+                ctx.fillStyle = centerGrad;
+                ctx.shadowColor = '#ffff00';
+                ctx.shadowBlur = 15;
+                ctx.fill();
+                ctx.shadowBlur = 0;
+
+                ctx.restore();
+            }
+        }
+
+        // Çiçekleri oluştur
+        const centerX = width / 2;
+        const baseY = height - 30;
+
+        // Ana çiçek grubu
+        flowers.push(new Flower(centerX, baseY, height * 0.55, 0, 0));
+        flowers.push(new Flower(centerX - 15, baseY, height * 0.45, 200, -0.3));
+        flowers.push(new Flower(centerX + 15, baseY, height * 0.48, 400, 0.25));
+        flowers.push(new Flower(centerX - 30, baseY, height * 0.35, 600, -0.5));
+        flowers.push(new Flower(centerX + 30, baseY, height * 0.38, 800, 0.45));
+
+        // Ateş böcekleri
+        function createFireflies() {
+            for (let i = 0; i < 25; i++) {
+                const firefly = document.createElement('div');
+                firefly.className = 'firefly';
+                firefly.style.left = Math.random() * 100 + '%';
+                firefly.style.top = (20 + Math.random() * 60) + '%';
+                firefly.style.animationDelay = Math.random() * 6 + 's';
+                firefly.style.animationDuration = (4 + Math.random() * 4) + 's';
+                document.body.appendChild(firefly);
+            }
+        }
+
+        // Parıltı
+        function createGlowParticle(x, y) {
+            const particle = document.createElement('div');
+            particle.className = 'glow-particle';
+            particle.style.left = (x + (Math.random() - 0.5) * 60) + 'px';
+            particle.style.top = (y + (Math.random() - 0.5) * 60) + 'px';
+            document.body.appendChild(particle);
+            setTimeout(() => particle.remove(), 2500);
+        }
+
+        // Kalpler
+        function createFloatingHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'floating-heart';
+            heart.innerHTML = ['❤️', '💕', '💖', '💗', '💝'][Math.floor(Math.random() * 5)];
+            heart.style.fontSize = (16 + Math.random() * 14) + 'px';
+            heart.style.left = Math.random() * window.innerWidth + 'px';
+            heart.style.top = window.innerHeight - 60 + 'px';
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 5000);
+        }
+
+        // Animasyon döngüsü
+        const startTime = Date.now();
+        let particleTimer = 0;
+
+        function animate() {
+            const time = Date.now() - startTime;
+            
+            ctx.clearRect(0, 0, width, height);
+
+            // Çiçekleri güncelle ve çiz
+            flowers.forEach(flower => {
+                flower.update(time);
+                flower.draw();
+            });
+
+            // Parıltı efekti
+            if (time > 2000 && time - particleTimer > 500) {
+                createGlowParticle(centerX, height * 0.4);
+                particleTimer = time;
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        // Başlat
+        window.addEventListener('load', () => {
+            createFireflies();
+            animate();
+            setInterval(createFloatingHeart, 2500);
+        });
+
+        // Tıklama efekti
+        document.body.addEventListener('click', (e) => {
+            for (let i = 0; i < 10; i++) {
+                createGlowParticle(e.clientX, e.clientY);
+            }
+        });
+
+        document.body.addEventListener('touchstart', (e) => {
+            const touch = e.touches[0];
+            for (let i = 0; i < 10; i++) {
+                createGlowParticle(touch.clientX, touch.clientY);
+            }
+        });
+    </script>
+</body>
+</html>
